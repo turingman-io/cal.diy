@@ -10,28 +10,19 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { ChevronLeftIcon, ChevronRightIcon } from "@coss/ui/icons";
 
+const formatUnit = (count: number, unit: "minute" | "hour", t: TFunction) =>
+  count === 1
+    ? t(`${unit}_one_short`, { count: 1 })
+    : t("multiple_duration_timeUnit_short", { count, unit });
+
 /** Render X mins as X hours or X hours Y mins instead of in minutes once >= 60 minutes */
 export const getDurationFormatted = (mins: number | undefined, t: TFunction) => {
   if (!mins) return null;
 
   const hours = Math.floor(mins / 60);
-  mins %= 60;
-  // format minutes string
-  let minStr = "";
-  if (mins > 0) {
-    minStr =
-      mins === 1
-        ? t("minute_one_short", { count: 1 })
-        : t("multiple_duration_timeUnit_short", { count: mins, unit: "minute" });
-  }
-  // format hours string
-  let hourStr = "";
-  if (hours > 0) {
-    hourStr =
-      hours === 1
-        ? t("hour_one_short", { count: 1 })
-        : t("multiple_duration_timeUnit_short", { count: hours, unit: "hour" });
-  }
+  const minutes = mins % 60;
+  const minStr = minutes > 0 ? formatUnit(minutes, "hour", t) : "";
+  const hourStr = hours > 0 ? formatUnit(hours, "hour", t) : "";
 
   if (hourStr && minStr) return `${hourStr} ${minStr}`;
   return hourStr || minStr;

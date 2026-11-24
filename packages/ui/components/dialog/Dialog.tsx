@@ -98,10 +98,15 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
             </div>
           )}
           {type === "confirmation" && (
-            <div>
-              <DialogHeader title={title} subtitle={props.description} icon={icon} />
-              <div data-testid="dialog-confirmation" className="flex flex-col">
-                {children}
+            <div className="flex">
+              {icon && (
+                <div className="bg-emphasis flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                  <Icon name={icon} className="text-emphasis h-4 w-4" />
+                </div>
+              )}
+              <div className="ml-4 grow">
+                <DialogHeader title={title} subtitle={props.description} />
+                <div data-testid="dialog-confirmation">{children}</div>
               </div>
             </div>
           )}
